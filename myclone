@@ -1,0 +1,26 @@
+#!/bin/bash
+
+if [ $# -lt 1 ];then
+    echo -e "\033[1;31mUsage: myclone <git url>\033[0m"
+    exit 84
+fi
+
+target=$(echo $1 | rev | cut -d- -f2 | rev)
+
+echo -e "\033[1;033mCloning $1 into $target...\033[0m"
+
+git clone $1 > /dev/null 2>&1
+
+if [ $? -ne 0 ]; then
+    echo -e "\033[1;31mCannot clone $1\033[0m"
+    exit 84
+fi
+
+mv $(echo $1 | rev | cut -d/ -f1 | cut -d. -f2- | rev) $target > /dev/null 2>&1
+
+if [ $? -ne 0 ]; then
+    echo -e "\033[1;31mCannot move $1 into $target\033[0m"
+    exit 84
+fi
+
+echo -e "\033[1;32mDone!\033[0m"
